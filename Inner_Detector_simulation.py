@@ -82,7 +82,8 @@ class InnerDetectorVisualizer:
         ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(0.05, 0.95))
 
         plt.tight_layout()
-        plt.show()
+       # plt.show() saad: plt.show doesnt work in terminal in a py file
+       plt.savefig("detector.png")
 
 # Utilization
 if __name__ == "__main__":
