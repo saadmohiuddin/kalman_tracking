@@ -10,3 +10,8 @@ dependencies = [
     "pytest>=8.4.1",
     "scipy>=1.16.0",
 ]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
