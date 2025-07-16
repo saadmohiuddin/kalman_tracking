@@ -4,9 +4,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import Patch
 
 class InnerDetector:
-    def __init__(self, length_mm=6200, diameter = 2100):
+    def __init__(self, length_mm=6200, diameter_mm = 2100):
         self.length = length_mm
-        self.diameter = diameter
+        self.diameter = diameter_mm
         self.radius = self.diameter / 2
         self.pixel_layers = (33.25, 50.5, 88.5, 122.5) #millimeter
         self.sct_trt_layers = np.linspace(200, self.radius, 4)
