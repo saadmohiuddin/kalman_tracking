@@ -10,11 +10,10 @@ class InnerDetector:
         self.diameter = diameter_mm
         self.radius = self.diameter / 2
         self.pixel_layers = (33.25, 50.5, 88.5, 122.5)  # mm
-        self.sct_trt_layers = np.linspace(200, self.radius, 4)
-        self.radii = list(self.pixel_layers) + list(self.sct_trt_layers)
+        # On ne conserve que les pixel layers, pas les SCT + TRT
+        self.radii = list(self.pixel_layers)
         self.subsystems = [
-            {'name': 'Pixel Detector', 'layers': range(0, 4), 'color': 'mediumorchid', 'alpha': 0.2},
-            {'name': 'SCT + TRT', 'layers': range(4, 8), 'color': 'dimgray', 'alpha': 0.1}
+            {'name': 'Pixel Detector', 'layers': range(0, 4), 'color': 'mediumorchid', 'alpha': 0.2}
         ]
         self.LONGITUDINAL_STEPS = 1000
         self.ANGULAR_STEPS = 500
@@ -35,8 +34,7 @@ class InnerDetector:
 
     def get_legend(self):
         return [
-            Patch(facecolor='mediumorchid', edgecolor='mediumorchid', label='Pixel Detector'),
-            Patch(facecolor='dimgray', edgecolor='dimgray', label='SCT + TRT')
+            Patch(facecolor='mediumorchid', edgecolor='mediumorchid', label='Pixel Detector')
         ]
 
 class DetectorSimulation:
@@ -63,9 +61,9 @@ class DetectorSimulation:
             self.layer.radius * 2
         ])
         self.ax.view_init(elev=10, azim=45)
-        self.ax.set_title('ATLAS Inner Detector with Track', fontsize=16)
+        self.ax.set_title('ATLAS Pixel Detector with Track', fontsize=16)
 
-    def draw_static_with_track(self, hits_dict, filename="Inner_Detector_with_Track.png"):
+    def draw_static_with_track(self, hits_dict, filename="Pixel_Detector_with_Track.png"):
         self.layer.draw(self.ax)
         self._setup_axes()
 
@@ -73,14 +71,12 @@ class DetectorSimulation:
         hit_coords = list(hits_dict.values())
         xs, ys, zs = zip(*hit_coords)
 
-        # Tracé amélioré de la trajectoire
+        # Tracé amélioré de la trajectoire (ligne rouge)
         self.ax.plot(xs, ys, zs, color='crimson', linewidth=3, label='Particle Track')
-        self.ax.scatter(xs, ys, zs, color='yellow', edgecolor='black', s=60, label='Hits on Layers', zorder=10)
 
         # Mise à jour de la légende
         legend_elements = self.layer.get_legend()
         legend_elements.append(Patch(facecolor='crimson', edgecolor='crimson', label='Particle Track'))
-        legend_elements.append(Patch(facecolor='yellow', edgecolor='black', label='Hits on Layers'))
 
         self.ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(0.05, 0.95))
 
@@ -96,7 +92,7 @@ class DetectorSimulation:
 
 if __name__ == "__main__":
     print("-" * 25, "Start", "-" * 25)
-    initial_guess = {"x": 2, "y": 1, "z": 0, "px": 30, "py": 40, "pz": 60, "charge": -1}
+    initial_guess = {"x": 0, "y": 0, "z": 0, "px": 30, "py": 200, "pz": 0, "charge": -1}
     track = TrackGenerator.TrackGenerator(**initial_guess)
 
     reachability = track.check_layer_reachability()
@@ -112,5 +108,5 @@ if __name__ == "__main__":
 
     # Dessiner
     sim = DetectorSimulation()
-    sim.draw_static_with_track(hits, filename="Inner_Detector_with_Track.png")
+    sim.draw_static_with_track(hits, filename="Pixel_Detector_with_Track2A.png")
     print("-" * 25, "End", "-" * 25)
