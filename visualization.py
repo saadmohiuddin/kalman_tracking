@@ -68,19 +68,31 @@ class DetectorSimulation:
     def draw_static_with_track(self, hits_dict, filename="Inner_Detector_with_Track.png"):
         self.layer.draw(self.ax)
         self._setup_axes()
-        self.ax.legend(handles=self.layer.get_legend(), loc='upper left', bbox_to_anchor=(0.05, 0.95))
 
-        # Convert hits (dict of radius: [x, y, z]) into a list of coordinates
+        # Hits
         hit_coords = list(hits_dict.values())
         xs, ys, zs = zip(*hit_coords)
 
-        # Tracer la trajectoire
-        self.ax.plot(xs, ys, zs, color='red', linewidth=2, label='Particle Track')
-        self.ax.scatter(xs, ys, zs, color='blue', s=30)
+        # Tracé amélioré de la trajectoire
+        self.ax.plot(xs, ys, zs, color='crimson', linewidth=3, label='Particle Track')
+        self.ax.scatter(xs, ys, zs, color='yellow', edgecolor='black', s=60, label='Hits on Layers', zorder=10)
+
+        # Mise à jour de la légende
+        legend_elements = self.layer.get_legend()
+        legend_elements.append(Patch(facecolor='crimson', edgecolor='crimson', label='Particle Track'))
+        legend_elements.append(Patch(facecolor='yellow', edgecolor='black', label='Hits on Layers'))
+
+        self.ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(0.05, 0.95))
+
+        # Amélioration visuelle
+        self.ax.set_facecolor('white')
+        self.ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.5)
+        self.ax.view_init(elev=20, azim=30)
 
         plt.tight_layout()
         plt.savefig(filename, dpi=300)
         print(f"Figure saved as: {filename}")
+
 
 if __name__ == "__main__":
     print("-" * 25, "Start", "-" * 25)
