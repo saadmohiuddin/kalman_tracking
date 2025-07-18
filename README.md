@@ -22,7 +22,6 @@ It is composed of:
 - `InnerDetector`: defines the geometry of the Inner Detector.
 - `DetectorSimulation`: renders and saves the visualization using `matplotlib`.
 
----
 
 ## Features
 
@@ -56,9 +55,7 @@ ax.legend(handles=detector.get_legend(), loc='upper left')
 plt.title("ATLAS Inner Detector Visualization")
 plt.show()
 
-This allows other team members (like Aissata) to integrate the detector into larger figures, custom simulations, or animations using Matplotlib’s 3D plotting tools.
-
----
+This allows other team members to integrate the detector into larger figures.
 
 ## Requirements
 
@@ -67,4 +64,3 @@ Install dependencies with:
 ```bash
 pip install matplotlib numpy
 
----
