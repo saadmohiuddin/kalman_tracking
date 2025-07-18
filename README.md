@@ -31,17 +31,6 @@ It is composed of:
 - 3D rendering using `matplotlib` with labeled axes and legend
 - Can be run as a standalone script or imported by other code (e.g. by Aissata)
 
----
-
-## Requirements
-
-Install dependencies with:
-
-```bash
-pip install matplotlib numpy
-
----
-
 Generate and Save a Static 3D Visualization
 
 from src.Inner_Detector_simulation import DetectorSimulation
@@ -67,3 +56,14 @@ plt.title("ATLAS Inner Detector Visualization")
 plt.show()
 
 This allows other team members (like Aissata) to integrate the detector into larger figures, custom simulations, or animations using Matplotlib’s 3D plotting tools.
+
+---
+
+## Requirements
+
+Install dependencies with:
+
+```bash
+pip install matplotlib numpy
+
+---
