@@ -30,17 +30,16 @@ It is composed of:
 - 3D rendering using `matplotlib` with labeled axes and legend
 - Can be run as a standalone script or imported by other code (e.g. by Aissata)
 
-Generate and Save a Static 3D Visualization
-
 ## Generate and Save a Static 3D Visualization
-from src.Inner_Detector_simulation import DetectorSimulation
 
+from src.Inner_Detector_simulation import DetectorSimulation
 sim = DetectorSimulation()
 sim.draw_static("Inner_Detector.png")
 
 This will save the detector figure as Inner_Detector.png in the current working directory.
 
 ## Import the Detector in Another Script
+
 import matplotlib.pyplot as plt             
 from mpl_toolkits.mplot3d import Axes3D               
 from src.Inner_Detector_simulation import InnerDetector
