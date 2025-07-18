@@ -18,7 +18,10 @@ if not reachability["all_reachable"]:
     print("-" * 25, "Generating Track that reaches all layer", "-" * 25)
     # track with 100 points of X/Y/Z coordinates#
     hits = track.generate_track_with_all_hits(max_attempts=100)
-    print(track)
+    # for Aissata
+    X, Y, Z, _, _ = track.evolve_track(time_steps=100) #you can increase time_steps for granularity
+    # just to show that it works
+    print(X[:5], Y[:5], Z[:5], type(X), type(Y), type(Z))
     reachability = track.check_layer_reachability()
 
 # this track hits all layers
