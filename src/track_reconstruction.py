@@ -8,30 +8,33 @@ import TrackGenerator
 
 
 #track = TrackGenerator.TrackGenerator(hit_coordinates, B, q=q, h=h, R_t=R_t, d0=d0, phi0=phi0, z0=z0, theta=theta)
-def get_circle_radius(a, b, c):
-        # Convert to numpy arrays
-        a, b, c = np.array(a), np.array(b), np.array(c)
-        
-        # Compute the lengths of the triangle sides
-        ab = np.linalg.norm(b - a)
-        bc = np.linalg.norm(c - b)
-        ca = np.linalg.norm(a - c)
 
-        # Compute the triangle's area using Heron's formula
-        s = (ab + bc + ca) / 2
-        area = np.sqrt(s * (s - ab) * (s - bc) * (s - ca))
-
-        # Radius formula: R = (abc) / (4 * area)
-        radius = (ab * bc * ca) / (4 * area) if area != 0 else float('inf')
-        return radius
+def fit_circle_least_squares(points):
+    """
+    Fits a circle to 4 (or more) 2D points using least squares.
+    Returns the radius.
+    """
+    x = np.array([p[0] for p in points])
+    y = np.array([p[1] for p in points])
+    
+    # Formulating matrix for least squares
+    A = np.c_[2*x, 2*y, np.ones(len(points))]
+    b = x**2 + y**2
+    
+    # Solving for circle parameters: Ax + By + C = r^2
+    sol = np.linalg.lstsq(A, b, rcond=None)[0]
+    center_x, center_y = sol[0], sol[1]
+    radius = np.sqrt(sol[2] + center_x**2 + center_y**2)
+    
+    return radius
 
 def estimate_initial_momentum(hits, B=2.0, charge=1):
-    r1, r2, r3 = hits[:3]
+    r1, r2, r3, r4 = hits[:4]
     direction = r2 - r1
     direction /= np.linalg.norm(direction)
 
     # Crude estimate of radius (use proper circle fit for accuracy)
-    R = get_circle_radius(r1[:2], r2[:2], r3[:2])
+    R = fit_circle_least_squares([r1[:2], r2[:2], r3[:2],r4[:2]])
 
     pt =  charge * B * R  # GeV
     momentum = pt * direction
@@ -66,19 +69,25 @@ def rk4_step(x, p, h=0.01, B=2.0,q=1):
 
     return x_new, p_new
 
-def recreate_track(hits, B=2.0, q=1,h=0.001):
+def recreate_track(hits, B=2.0, q=1,h=-0.001,time_steps=5000):
     # Estimate initial momentum
 
     p = estimate_initial_momentum(hits, B, q)
     x = np.array(hits[0][:3])  # Start from the first hit position
     trajectory = [x]
-    time_steps = 10000
+    
     for i in range(time_steps):
         x, p = rk4_step(x, p,h=h,q=q)
         trajectory.append(x)
     return trajectory
 
 # Example usage
+def get_impact_parameter(hits):
+    """
+    Calculate the impact parameter from the first two hits.
+    """
+    r1, r2 = hits[0][:2], hits[1][:2]
+    return np.linalg.norm(r1 - r2) / 2  # Simple average distance
 
 if __name__ == "__main__":
     # Initial conditions
