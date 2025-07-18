@@ -1,19 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kalman-tracking"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.8"
 dependencies = [
-    "matplotlib>=3.10.3",
-    "numpy>=2.3.1",
-    "pytest>=8.4.1",
-    "scipy>=1.16.0",
+    "matplotlib>=3.5.0",
+    "numpy>=1.21.0",
+    "pytest>=7.0.0",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 88
-target-version = "py313"
+target-version = "py38"
 
 [tool.ruff.format]
 line-ending = "auto"
@@ -27,3 +33,7 @@ select = ["E", "F", "W", "B", "I", "RUF", "UP"]
 ignore = [
     "E501", # long line
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-v"]
