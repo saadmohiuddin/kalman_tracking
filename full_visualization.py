@@ -13,37 +13,53 @@ reachability = track.check_layer_reachability()
 if not reachability["all_reachable"]:
     track.generate_track_with_all_hits()
 
-# 3. Get the full trajectory (X, Y, Z points)
+# 3. Get the full particle trajectory
 x_vals, y_vals, z_vals, _, _ = track.evolve_track(time_steps=5000)
 
-# 4. Initialize the detector simulation
+# 4. Initialize detector simulation
 sim = DetectorSimulation()
 
-# 5. Plot only the 4 pixel layers as transparent cylinders
+# 5. Plot all layers of the inner detector (Pixel, SCT, TRT)
 z = np.linspace(-sim.layer.length / 2, sim.layer.length / 2, sim.layer.LONGITUDINAL_STEPS)
 theta = np.linspace(0, 2 * np.pi, sim.layer.ANGULAR_STEPS)
 Z, Theta = np.meshgrid(z, theta)
 
-for i in range(4):  # Only the 4 pixel layers
-    r = sim.layer.radii[i]
+# Define colors for each sub-detector group
+colors = {
+    "Pixel": "mediumorchid",
+    "SCT": "royalblue",
+    "TRT": "royalblue"
+}
+
+# Draw all cylindrical layers
+for i, r in enumerate(sim.layer.radii):
+    if i < 4:
+        color = colors["Pixel"]
+    elif i < 8:
+        color = colors["SCT"]
+    else:
+        color = colors["TRT"]
+    
     X = r * np.sin(Theta)
     Y = r * np.cos(Theta)
-    sim.ax.plot_surface(Z, Y, X, color='mediumorchid', alpha=0.2, edgecolor='none')
+    sim.ax.plot_surface(Z, Y, X, color=color, alpha=0.2, edgecolor='none')
 
-# 6. Set up the 3D axes
+# 6. Set up 3D axes
 sim._setup_axes()
 
 # 7. Plot the particle trajectory
 sim.ax.plot(z_vals, x_vals, y_vals, color='red', linewidth=2, label='Particle Trajectory')
 
-# 8. Add legend
+# 8. Legend
 legend_patches = [
-    Patch(facecolor='mediumorchid', edgecolor='mediumorchid', label='Pixel Detector'),
+    Patch(facecolor=colors["Pixel"], edgecolor=colors["Pixel"], label='Pixel Detector'),
+    Patch(facecolor=colors["SCT"], edgecolor=colors["SCT"], label='SCT Detector'),
+    Patch(facecolor=colors["TRT"], edgecolor=colors["TRT"], label='TRT Detector'),
     Patch(color='red', label='Particle Trajectory')
 ]
 sim.ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0.05, 0.95))
 
-# 9. Display and save the figure
+# 9. Show and save the plot
 plt.tight_layout()
-plt.savefig("trajectory2.png", dpi=300)
+plt.savefig("full_detector_trajectory.png", dpi=300)
 plt.show()
