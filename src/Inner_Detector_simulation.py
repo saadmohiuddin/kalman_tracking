@@ -3,6 +3,52 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import Patch
 
+"""
+Inner_Detector_simulation.py
+------------------
+
+This module provides classes to simulate and visualize the ATLAS Inner Detector structure in 3D.
+
+It defines two main classes:
+- InnerDetector: models the geometry of the inner detector (Pixel + SCT/TRT layers)
+- DetectorSimulation: manages visualization and rendering using matplotlib
+
+The detector includes:
+- Pixel Detector layers at radii: 33.25 mm, 50.5 mm, 88.5 mm, and 122.5 mm
+- SCT/TRT layers generated via linear spacing up to 1050 mm (half of full diameter)
+
+USAGE EXAMPLES:
+===============
+
+1. To draw and save the detector visualization:
+
+    from Inner_Detector_simulation.py import DetectorSimulation
+
+    sim = DetectorSimulation()
+    sim.draw_static("my_plot.png")
+
+2. To draw the detector as part of a custom plot (e.g., Aissata’s use case):
+
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D
+    from Inner_Detector_simulation.py import InnerDetector
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    detector = InnerDetector()
+    detector.draw(ax)
+    ax.legend(handles=detector.get_legend())
+    plt.title("ATLAS Inner Detector Visualization")
+    plt.show()
+
+NOTES:
+======
+- `InnerDetector.draw(ax)` expects a 3D matplotlib axes instance.
+- `DetectorSimulation.draw_static()` automatically sets up the plot and saves it as an image.
+"""
+
+
 class InnerDetector:
     def __init__(self, length_mm=6200, diameter_mm = 2100):
         self.length = length_mm
