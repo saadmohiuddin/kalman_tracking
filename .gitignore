@@ -1,3 +1,6 @@
+**/__pycache__
+uv.lock
+=======
 # File taken from CI homework of SE4Sci
 # Byte-compiled / optimized / DLL files
 __pycache__/
