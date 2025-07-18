@@ -32,9 +32,9 @@ It is composed of:
 
 ## Generate and Save a Static 3D Visualization
 
-from src.Inner_Detector_simulation import DetectorSimulation
-sim = DetectorSimulation()
-sim.draw_static("Inner_Detector.png")
+from src.Inner_Detector_simulation import DetectorSimulation           
+sim = DetectorSimulation()           
+sim.draw_static("Inner_Detector.png")         
 
 This will save the detector figure as Inner_Detector.png in the current working directory.
 
