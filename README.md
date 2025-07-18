@@ -13,5 +13,3 @@ model, and simulate charged particle trajectories that register hits on them. Th
  ## Pixel Detector Track Simulation
 
  This project involves reconstructing the passage of charged particles through the pixel detector. To make this project more manageable, we have divided it into 4 tasks. On the one hand, we simulated the ATLAS detector with an axis of x, y, z coordinates and simulated the behavior of a charged particle subjected to a magnetic field. On the other, we linked the particle's impact points to the 4 pixel layers and created a .png file.
-
-![ ](Pixel_Detector_with_Track2A.png)
