@@ -40,20 +40,18 @@ Install dependencies with:
 ```bash
 pip install matplotlib numpy
 
+---
 
-This project aims to simulate a simplified version of the ATLAS Inner Detector and generate charged particle trajectories in a uniform magnetic field. Hits are registered where particle helices intersect detector layers. These hits form the basis for track reconstruction algorithms like the Kalman Filter.
+Generate and Save a Static 3D Visualization
 
-## Implementation of the Inner Detector Simulation
-
-Geometry: We construct a 3D cylindrical meshgrid representing 8 concentric radial detector layers, each spanning 1000 bins in the longitudinal ($z$) direction and 500 bins in azimuthal angle ($\phi$).
-##Generate and save a static 3D visualization
 from src.Inner_Detector_simulation import DetectorSimulation
 
 sim = DetectorSimulation()
 sim.draw_static("Inner_Detector.png")
 
-This will save the detector figure as Inner_Detector.png
-##Import the detector in another script (Aissata's use case)
+This will save the detector figure as Inner_Detector.png in the current working directory.
+Import the Detector in Another Script (Aissata’s Use Case)
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from src.Inner_Detector_simulation import InnerDetector
@@ -67,4 +65,5 @@ detector.draw(ax)
 ax.legend(handles=detector.get_legend(), loc='upper left')
 plt.title("ATLAS Inner Detector Visualization")
 plt.show()
-This allows other team members to integrate the detector into larger figures or animations.
+
+This allows other team members (like Aissata) to integrate the detector into larger figures, custom simulations, or animations using Matplotlib’s 3D plotting tools.
