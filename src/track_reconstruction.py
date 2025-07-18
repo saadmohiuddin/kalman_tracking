@@ -1,21 +1,53 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import TrackGenerator
+
 
 # Constants
-q = 1.0   # charge in e
-mass = 0.105 # GeV/c² for muon (you can replace with realistic values)
-B = np.array([0.0, 0.0, 2.0])  # Tesla, uniform field in z-direction
-h = 0.01  # Step size in meters
 
-def lorentz_force(p, B):
+
+
+#track = TrackGenerator.TrackGenerator(hit_coordinates, B, q=q, h=h, R_t=R_t, d0=d0, phi0=phi0, z0=z0, theta=theta)
+def get_circle_radius(a, b, c):
+        # Convert to numpy arrays
+        a, b, c = np.array(a), np.array(b), np.array(c)
+        
+        # Compute the lengths of the triangle sides
+        ab = np.linalg.norm(b - a)
+        bc = np.linalg.norm(c - b)
+        ca = np.linalg.norm(a - c)
+
+        # Compute the triangle's area using Heron's formula
+        s = (ab + bc + ca) / 2
+        area = np.sqrt(s * (s - ab) * (s - bc) * (s - ca))
+
+        # Radius formula: R = (abc) / (4 * area)
+        radius = (ab * bc * ca) / (4 * area) if area != 0 else float('inf')
+        return radius
+
+def estimate_initial_momentum(hits, B=2.0, charge=1):
+    r1, r2, r3 = hits[:3]
+    direction = r2 - r1
+    direction /= np.linalg.norm(direction)
+
+    # Crude estimate of radius (use proper circle fit for accuracy)
+    R = get_circle_radius(r1[:2], r2[:2], r3[:2])
+
+    pt =  charge * B * R  # GeV
+    momentum = pt * direction
+    return momentum
+
+#estimate_initial_momentum(hit_coordinates, B=2.0, charge=-1)
+
+def lorentz_force(q, p, B):
     # Velocity from momentum (non-relativistic approx)
-    v = p / np.linalg.norm(p)
-    return q * np.cross(v, B)
+    v = p #/ np.linalg.norm(p)  # Normalize momentum to get direction
+    return q * np.array([v[1], -v[0], 0]) * B  # Cross product in 3D
 
-def rk4_step(x, p):
+def rk4_step(x, p, h=0.01, B=2.0,q=1):
     # RK4 integration for position and momentum
-    def dp_dt(p): return lorentz_force(p, B)
-    def dx_dt(p): return p / np.linalg.norm(p)  # direction of motion
+    def dp_dt(p): return lorentz_force(q,p, B)
+    def dx_dt(p): return p   # direction of motion
 
     k1_x = h * dx_dt(p)
     k1_p = h * dp_dt(p)
@@ -34,27 +66,55 @@ def rk4_step(x, p):
 
     return x_new, p_new
 
+def recreate_track(hits, B=2.0, q=1,h=0.001):
+    # Estimate initial momentum
+
+    p = estimate_initial_momentum(hits, B, q)
+    x = np.array(hits[0][:3])  # Start from the first hit position
+    trajectory = [x]
+    time_steps = 10000
+    for i in range(time_steps):
+        x, p = rk4_step(x, p,h=h,q=q)
+        trajectory.append(x)
+    return trajectory
+
 # Example usage
-x = np.array([0.0, 0.0, 0.0])  # initial position
-p = np.array([0.2, 0.1, 0.3])  # initial momentum (GeV/c)
 
-trajectory = [x]
-for i in range(1000):
-    x, p = rk4_step(x, p)
-    trajectory.append(x)
+if __name__ == "__main__":
+    # Initial conditions
+    initial_guess = {"x": 0.0, "y": 0.0, "z": 0.0, "px": 0.2, "py": 0.1, "pz": 0.3, "charge": q}
+    track = TrackGenerator.TrackGenerator(**initial_guess)
 
-print(np.array(trajectory)[:, 0], np.array(trajectory)[:, 1],np.array(trajectory)[:, 2])
-x = np.array(trajectory)[:, 0]
-y = np.array(trajectory)[:, 1]
-z = np.array(trajectory)[:, 2]
-print(x)
-print(y)
-print(z)
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot(x, y, z)
-ax.set_xlabel('X Position (m)')
-ax.set_ylabel('Y Position (m)')
-ax.set_zlabel('Z Position (m)')
-ax.set_title('Particle Trajectory in Magnetic Field')
+    print("-" * 25, "Original Track", "-" * 25)
+    print(track)
+    print("-" * 50)
+
+    # Generate track with RK4
+    hit_coordinates = track.generate_track_with_all_hits(max_attempts=100)
+    print("Hit Coordinates:", hit_coordinates)
+
+    # Simulate trajectory
+    x = np.array([0.0, 0.0, 0.0])  # initial position
+    p = np.array([0.2, 0.1, 0.3])  # initial momentum (GeV/c)
+
+    trajectory = recreate_track(hit_coordinates, B=2.0, charge=q)
+
     
+
+    print(np.array(trajectory)[:, 0], np.array(trajectory)[:, 1],np.array(trajectory)[:, 2])
+    x = np.array(trajectory)[:, 0]
+    y = np.array(trajectory)[:, 1]
+    z = np.array(trajectory)[:, 2]
+    print(x)
+    print(y)
+    print(z)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(x, y, z)
+    ax.set_xlabel('X Position (m)')
+    ax.set_ylabel('Y Position (m)')
+    ax.set_zlabel('Z Position (m)')
+    ax.set_title('Particle Trajectory in Magnetic Field')
+
+    fig.savefig('particle_trajectory.png')
+        
