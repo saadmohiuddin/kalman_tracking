@@ -42,8 +42,8 @@ sim.draw_static("Inner_Detector.png")
 This will save the detector figure as Inner_Detector.png in the current working directory.
 
 ## Import the Detector in Another Script
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt             
+from mpl_toolkits.mplot3d import Axes3D               
 from src.Inner_Detector_simulation import InnerDetector
 
 fig = plt.figure()
