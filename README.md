@@ -11,7 +11,7 @@ The Inner detectors at ATLAS and CMS aim to reconstruct charged particle traject
 For this project, we aim to write a python package that recreates a toy model of ATLAS track reconstruction. We will use numpy to create a 3d meshgrid of cylindrical coordinates to act as our detector
 model, and simulate charged particle trajectories that register hits on them. Then we will use a Kalman filter algorithm that we will either write ourselves, or use a package, to reconstruct the tracks using the data from hits. We will use object oriented programming design in python to create classes for tracks, the detector, and for hits on the detector. We will use matplotlib to help visualize our tracks and see how the reconstructed tracks from the Kalman filter lines up with the original track.
 
-# Inner Detector Simulation Module
+## Inner Detector Simulation Module
 
 ### 📄 File: `src/Inner_Detector_simulation.py`
 
@@ -23,23 +23,23 @@ It is composed of:
 - `DetectorSimulation`: renders and saves the visualization using `matplotlib`.
 
 
-## Features
+### Features
 
 - **Pixel Detector** layers at: `33.25 mm`, `50.5 mm`, `88.5 mm`, `122.5 mm`
 - **SCT/TRT** layers: automatically generated from `200 mm` to `1050 mm`
 - 3D rendering using `matplotlib` with labeled axes and legend
 - Can be run as a standalone script or imported by other code (e.g. by Aissata)
 
-## Generate and Save a Static 3D Visualization
-
+### Generate and Save a Static 3D Visualization
+'''python  
 from src.Inner_Detector_simulation import DetectorSimulation           
 sim = DetectorSimulation()           
 sim.draw_static("Inner_Detector.png")         
-
+'''   
 This will save the detector figure as Inner_Detector.png in the current working directory.
 
-## Import the Detector in Another Script
-
+### Import the Detector in Another Script
+'''python  
 import matplotlib.pyplot as plt             
 from mpl_toolkits.mplot3d import Axes3D               
 from src.Inner_Detector_simulation import InnerDetector
@@ -53,10 +53,10 @@ detector.draw(ax)
 ax.legend(handles=detector.get_legend(), loc='upper left')
 plt.title("ATLAS Inner Detector Visualization")
 plt.show()
-
+'''      
 This allows other team members to integrate the detector into larger figures.
 
-## Requirements
+### Requirements
 
 Install dependencies with:
 
