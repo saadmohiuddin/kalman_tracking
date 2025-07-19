@@ -61,5 +61,5 @@ sim.ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0.05, 0.
 
 # 9. Show and save the plot
 plt.tight_layout()
-plt.savefig("char_partucle_tracks.png", dpi=300)
+plt.savefig("char_particle_tracks.png", dpi=300)
 plt.show()
