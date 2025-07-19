@@ -31,15 +31,15 @@ It is composed of:
 - Can be run as a standalone script or imported by other code (e.g. by Aissata)
 
 ### Generate and Save a Static 3D Visualization
-'''python  
+```python  
 from src.Inner_Detector_simulation import DetectorSimulation           
 sim = DetectorSimulation()           
 sim.draw_static("Inner_Detector.png")         
-'''   
+``` 
 This will save the detector figure as Inner_Detector.png in the current working directory.
 
 ### Import the Detector in Another Script
-'''python  
+```python  
 import matplotlib.pyplot as plt             
 from mpl_toolkits.mplot3d import Axes3D               
 from src.Inner_Detector_simulation import InnerDetector
@@ -53,7 +53,7 @@ detector.draw(ax)
 ax.legend(handles=detector.get_legend(), loc='upper left')
 plt.title("ATLAS Inner Detector Visualization")
 plt.show()
-'''      
+```     
 This allows other team members to integrate the detector into larger figures.
 
 ### Requirements
