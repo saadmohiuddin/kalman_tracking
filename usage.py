@@ -3,7 +3,15 @@ from src import TrackGenerator
 # Example showing how to generate tracks for Kalman Filter algorithm. Input for Saad
 print("-" * 25, "Start", "-" * 25)
 
-initial_guess = {"x": 2, "y": 1, "z": 0, "px": 30, "py": 40, "pz": 60, "charge": -1}
+initial_guess = {
+    "x": 2,
+    "y": 1,
+    "z": 0,
+    "px": 30,
+    "py": 40,
+    "pz": 60,
+    "charge": -1,
+}
 track = TrackGenerator.TrackGenerator(**initial_guess)
 print("-" * 25, "Original Track", "-" * 25)
 print(track)
@@ -13,12 +21,19 @@ print("-" * 50)
 reachability = track.check_layer_reachability()
 print(f"Reaches all Layer : {reachability['all_reachable']}")
 print("-" * 50)
-# print(reachability) # to reach all layers - all_reachable should be true. Saad - uncomment this if you want to see all info. But this is not necessary for your part of work
+# print(reachability) # to reach all layers - all_reachable should be true.
+# Saad - uncomment this if you want to see all info. But this is not necessary for your
+# part of work
 if not reachability["all_reachable"]:
     print("-" * 25, "Generating Track that reaches all layer", "-" * 25)
     # track with 100 points of X/Y/Z coordinates#
     hits = track.generate_track_with_all_hits(max_attempts=100)
-    print(track)
+    # for Aissata
+    X, Y, Z, _, _ = track.evolve_track(
+        time_steps=100
+    )  # you can increase time_steps for granularity
+    # just to show that it works
+    print(X[:5], Y[:5], Z[:5], type(X), type(Y), type(Z))
     reachability = track.check_layer_reachability()
 
 # this track hits all layers
