@@ -1,3 +1,4 @@
+
 # Kalman Filter Track Reconstruction
 
 This project aims to simulate charged particle track reconstruction as it happens in ATLAS.
@@ -23,35 +24,49 @@ from src import TrackGenerator
 
 initial_guess = {"x": 2, "y": 1, "z": 0, "px": 30, "py": 40, "pz": 60, "charge": -1}
 track = TrackGenerator.TrackGenerator(**initial_guess)
-2. Check Detector Reachability
+
+```
+
+### 2. Check Detector Reachability
+
 Check whether the track hits all pixel layers:
+
+
+
+```python
 reachability = track.check_layer_reachability()
 print(f"Reaches all layers: {reachability['all_reachable']}")
-If not, generate a new track:
 
+```
+If not, generate a new track:
+```python
 
 if not reachability["all_reachable"]:
     hits = track.generate_track_with_all_hits(max_attempts=100)
-3. Extract Hit Coordinates
+```
 
+### 3. Extract Hit Coordinates
+
+```python
 hits = track.find_layer_intersections()
+```
+
 These coordinates are used by the Kalman filter algorithm.
 
-Visualization of Particle Trajectories
-📄 File: particules_tracks.py
+## Visualization of Particle Trajectories
+
+📄 File: `particules_tracks.py`
 
 This script performs 3D visualization of a charged particle inside the Inner Detector. It includes:
 
-Initialization of the particle
+* Initialization of the particle
+* Simulation of its trajectory (5000 time steps)
+* Rendering of the cylindrical detector
+* Overlay of the track on the detector
 
-Simulation of its trajectory (5000 time steps)
+### Sample Code
 
-Rendering of the cylindrical detector
-
-Overlay of the track on the detector
-
-Sample Code
-
+```python
 from src import TrackGenerator
 from src.Inner_Detector_simulation import DetectorSimulation
 
@@ -70,18 +85,24 @@ sim.plot_detector()
 
 sim.ax.plot(z_vals, x_vals, y_vals, color='red', linewidth=2, label='Particle Trajectory')
 
-plt.savefig("char_partucle_tracks.png", dpi=300)
+plt.savefig("char_particle_tracks.png", dpi=300)
 plt.show()
-Output
-The result is a 3D image of the particle’s path across ATLAS’s pixel layers:
-
 ```
 
+### Output
+
+The result is a 3D image of the particle’s path across ATLAS’s pixel layers:
+
+![OutputFiger](char_particle_tracks.png)
 
 ## Future Improvements
-Automate track generation for larger datasets
 
-Improve robustness of track parameters
+* Automate track generation for larger datasets
+* Improve robustness of track parameters
+* Integrate Kalman filter fully with hit extraction
 
-Integrate Kalman filter fully with hit extraction
+
+
+
+
 
