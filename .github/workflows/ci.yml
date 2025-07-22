@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   pre-commit:
@@ -13,21 +13,26 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.8", "3.13"]
+        python-version: ["3.8", "3.10"]
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install pre-commit
-        run: python -m pip install pre-commit
+        run: python -m pip install --upgrade pip pre-commit
+
       - name: Cache pre-commit hooks
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}
+
       - name: Run pre-commit hooks
         run: pre-commit run --all-files --show-diff-on-failure
+
       - name: Show diff on failure
         if: failure()
         run: git diff
@@ -38,21 +43,25 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.8", "3.13"]
+        python-version: ["3.8", "3.10"]
         include:
           - python-version: "3.8"
             python-label: "minimum"
-          - python-version: "3.13"
+          - python-version: "3.10"
             python-label: "latest"
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
+
       - name: Install dependencies
         run: uv sync
+
       - name: Run tests (${{ matrix.python-label }} Python)
         run: uv run pytest
 
@@ -64,10 +73,13 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
+
       - name: Build package
         run: uv build
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
